@@ -75,6 +75,10 @@ jobs:
           mkdir -p "$HOME/.expo"
           umask 077
           printf '%s' "$EXPO_STATE_JSON" > "$HOME/.expo/state.json"
+          if ! python3 -c 'import json,os,sys; json.load(open(os.path.expanduser("~/.expo/state.json")))' 2>/dev/null; then
+            echo "::error::EXPO_STATE_JSON geçerli JSON değil (tırnaklar kaybolmuş olabilir). Trader-Mobile/scripts/ios-build-secrets.ps1 betiğini yeniden çalıştır."
+            exit 1
+          fi
           npx eas-cli@latest whoami
 
       - name: IPA derle (Mac üzerinde, EAS bulut kotası harcanmaz)
